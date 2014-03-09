@@ -28,6 +28,7 @@ void default_programming() {
 	while (!usb_configured()) {
 		launch_effect(rand() % EFFECTS_TOTAL);
 	}
+	show_text("USB");
 	read_from_usb();
 }
 

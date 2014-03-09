@@ -3,6 +3,10 @@
 #include "draw.h"
 #include "gameoflife.h"
 
+void show_text(char* text) {
+	effect_stringfly2(text);
+}
+
 void launch_effect (int effect)
 {
 	int i;
@@ -91,7 +95,7 @@ void launch_effect (int effect)
 			
 			
 		case 12:
-			effect_stringfly2("INSTRUCTABLES");
+			effect_stringfly2("HELLO WORLD");
 			break;
 			
 		case 13:
@@ -174,9 +178,6 @@ void launch_effect (int effect)
 		default:
 			effect_stringfly2("FAIL");
 			break;
-		
-		
-
 	}
 }
 

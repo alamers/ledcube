@@ -10,6 +10,7 @@
 #define EFFECTS_TOTAL 27
 
 void launch_effect (int effect);
+void show_text(char* str);
 
 #endif
 

@@ -1,0 +1,2 @@
+COMPILER_PATH=/usr/local/CrossPack-AVR/bin
+LIBRARY_PATH=/usr/local/CrossPack-AVR/lib

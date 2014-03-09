@@ -9,7 +9,10 @@
 #include <conio.h>
 #endif
 
+#include "controller.h"
+
 #include "hid.h"
+#include "font.h"
 
 #define UP		'o' 
 #define DOWN		'l'
@@ -18,9 +21,8 @@
 #define FORWARD		's'
 #define BACKWARD	'w'
 #define PRINT		' '
+#define TEXT		't'
 
-typedef unsigned char uint8_t; 
-typedef signed char int8_t;
 
 void read_from_cube(int device_nr);
 void write_to_cube(int device_nr, uint8_t[]);
@@ -29,6 +31,7 @@ void setpixel(uint8_t,uint8_t,uint8_t,uint8_t[]);
 int getpixel(uint8_t,uint8_t,uint8_t,uint8_t[]);
 void move(char);
 void dump(uint8_t[]);
+void text();
 
 static char get_keystroke(void);
 
@@ -50,6 +53,8 @@ int main()
 		return -1;
 	}
 	printf("found rawhid device %d\n", device_nr);
+	printf("Use a/s/w/d/o/l to move cursor around\n");
+	printf("Use t to print text\n");
 
 	while (1) {
 		// check if any Raw HID packet has arrived
@@ -59,6 +64,8 @@ int main()
 		while ((c = get_keystroke()) >= 32) {
 			if (c==PRINT) {
 				dump(buf);
+			} else if (c==TEXT) {
+				text(device_nr);
 			} else {
 				move(c);
 				clear(buf);
@@ -114,6 +121,28 @@ void move(char c) {
 		case BACKWARD: cursor_y--; if (cursor_y<0) cursor_y = 7; break;
 		default: i = c; printf("\nunknown key '%c' (%d)\n", c, i); break;
 	}
+}
+
+void text(int device_nr) {
+	printf("press backspace to quit");
+	char c; // pressed key
+	unsigned char chr[5];
+	while ((c = get_keystroke()) != 127) {
+		clear(buf);
+		font_getchar(c, chr);
+
+		// Put a character on the back of the cube
+		for (int x = 0; x < 5; x++) {
+			for (int y = 0; y < 8; y++) {
+				if ((chr[x] & (0x80 >> y))) {
+					setpixel(7, x + 2, y, buf);
+				}
+			}
+		}
+		dump(buf);
+		rawhid_send(device_nr, buf, 64, 100);
+	}
+
 }
 
 

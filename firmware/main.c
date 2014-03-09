@@ -31,30 +31,6 @@ void default_programming() {
 	read_from_usb();
 }
 
-void only(int _x, int _y, int _z) {
-	for (int x=0; x<8; x++) {
-		for (int y=0; y<8; y++) {
-			for (int z=0; z<8; z++) {
-				clrvoxel(x,y,z);
-			}
-		}
-	}
-
-	setvoxel(_x,_y,_z);
-}
-
-void launch_test_effect() {
-	for (int x=0; x<8; x++) {
-		for (int y=0; y<8; y++) {
-			for (int z=0; z<8; z++) {
-				only(x,y,z);
-				delay_ms(1000);
-			}
-		}
-	}
-}
-
-
 uint8_t usb_buffer[64];
 void read_from_usb() {
         for(;;) {

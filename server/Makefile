@@ -40,10 +40,10 @@ $(PROG).exe: $(PROG)
 	cp $(PROG) $(PROG).exe
 
 $(PROG).dmg: $(PROG)
-	rm -rf tmp
-	mkdir tmp
-	cp $(PROG) tmp
-	hdiutil create -ov -volname "Raw HID Test" -srcfolder tmp $(PROG).dmg
+#	rm -rf tmp
+#	mkdir tmp
+#	cp $(PROG) tmp
+#	hdiutil create -ov -volname "Raw HID Test" -srcfolder tmp $(PROG).dmg
 
 hid.o: hid_$(OS).c hid.h
 	$(CC) $(CFLAGS) -c -o $@ $<

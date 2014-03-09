@@ -6,9 +6,6 @@
 void setvoxel(int x, int y, int z)
 {
 	if (inrange(x,y,z)) {
-		if (y%2==1) {
-			x = 7-x;
-		}
 		cube[z][y] |= (1 << x);
 	}
 }
@@ -17,8 +14,8 @@ void setvoxel(int x, int y, int z)
 void fb_setvoxel(int x, int y, int z)
 {
 	if (inrange(x,y,z)) {
-		if (y>=4) {
-		//	x = 7-x;
+		if (y%2==1) {
+			x = 7-x;
 		}
 		fb[z][y] |= (1 << x);
 	}
@@ -27,25 +24,25 @@ void fb_setvoxel(int x, int y, int z)
 // Set a single voxel to OFF
 void clrvoxel(int x, int y, int z)
 {
-	if (inrange(x,y,z))
+	if (inrange(x,y,z)) {
 		cube[z][y] &= ~(1 << x);
+	}
 }
 
 // Set a single voxel to OFF
 void fb_clrvoxel(int x, int y, int z)
 {
-	if (inrange(x,y,z))
+	if (inrange(x,y,z)) {
 		fb[z][y] &= ~(1 << x);
+	}
 }
 
 // This function validates that we are drawing inside the cube.
 unsigned char inrange(int x, int y, int z)
 {
-	if (x >= 0 && x < CUBE_SIZE && y >= 0 && y < CUBE_SIZE && z >= 0 && z < CUBE_SIZE)
-	{
+	if (x >= 0 && x < CUBE_SIZE && y >= 0 && y < CUBE_SIZE && z >= 0 && z < CUBE_SIZE) {
 		return 1;
-	} else
-	{
+	} else {
 		// One of the coordinates was outside the cube.
 		return 0;
 	}
@@ -54,30 +51,23 @@ unsigned char inrange(int x, int y, int z)
 // Get the current status of a voxel
 unsigned char getvoxel(int x, int y, int z)
 {
-	if (inrange(x,y,z))
-	{
-		if (cube[z][y] & (1 << x))
-		{
+	if (inrange(x,y,z)) {
+		if (cube[z][y] & (1 << x)) {
 			return 1;
-		} else
-		{
+		} else {
 			return 0;
 		}
-	} else
-	{
+	} else {
 		return 0;
 	}
 }
 
 // In some effect we want to just take bool and write it to a voxel
 // this function calls the apropriate voxel manipulation function.
-void altervoxel(int x, int y, int z, int state)
-{
-	if (state == 1)
-	{
+void altervoxel(int x, int y, int z, int state) {
+	if (state == 1) {
 		setvoxel(x,y,z);
-	} else
-	{
+	} else {
 		clrvoxel(x,y,z);
 	}
 }
@@ -86,8 +76,9 @@ void altervoxel(int x, int y, int z, int state)
 // If the voxel is 1, its turned into a 0, and vice versa.
 void flpvoxel(int x, int y, int z)
 {
-	if (inrange(x, y, z))
+	if (inrange(x, y, z)) {
 		cube[z][y] ^= (1 << x);
+	}
 }
 
 // Makes sure x1 is alwas smaller than x2

@@ -1,0 +1,9 @@
+*.o
+firmware/.dep/
+*.lst
+*.eep
+*.elf
+*.hex
+*.lss
+*.map
+*.sym

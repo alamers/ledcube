@@ -90,8 +90,7 @@ void dump(uint8_t buf[]) {
 }
 
 void clear(uint8_t buf[]) {
-	int i;
-	for (i=0; i<64; i++) {
+	for (int i=0; i<64; i++) {
 		buf[i] = 0;
 	}
 }
@@ -101,9 +100,6 @@ int getpixel(uint8_t x, uint8_t y, uint8_t z, uint8_t buf[]) {
 }
 
 void setpixel(uint8_t x, uint8_t y, uint8_t z, uint8_t buf[]) {
-	if (y%2==1) {
-		x = 7-x;
-	}
         buf[z*8 + y] |= (1 << x);
 }
 

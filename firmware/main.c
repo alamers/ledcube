@@ -12,6 +12,7 @@
 #include "analog.h"
 
 void launch_test_effect();
+unsigned char reverse_byte(uint8_t b);
 
 int main (void)
 {
@@ -46,6 +47,14 @@ void read_from_usb() {
         }
 }
 
+uint8_t reverse_byte(uint8_t b) {
+  static const uint8_t t[16] =
+  {
+    0x0, 0x8, 0x4, 0xC, 0x2, 0xA, 0x6, 0xE,
+    0x1, 0x9, 0x5, 0xD, 0x3, 0xB, 0x7, 0xF
+  };
+  return t[b >> 4] | (t[b & 0xF] << 4);
+}
 
 /*
  * Multiplexer/framebuffer routine
@@ -69,12 +78,13 @@ ISR(TIMER0_COMPA_vect)
 	OE_PORT |= OE_MASK; // Set OE high, disabling all outputs on latch array
 
 	// y coordinates are mixed up so correct here by unfolding the y-loop
+	// flipflops on odd y's are mirrored, so reverse byte there
 
 	DATA_BUS = cube[current_layer][0];
 	unsigned char flipflop_addr = (0) << 5;
         LATCH_ADDR = (LATCH_ADDR & LATCH_MASK_INV) | (LATCH_MASK & flipflop_addr);
 
-	DATA_BUS = cube[current_layer][7];
+	DATA_BUS = reverse_byte(cube[current_layer][7]);
 	flipflop_addr = (4) << 5;
         LATCH_ADDR = (LATCH_ADDR & LATCH_MASK_INV) | (LATCH_MASK & flipflop_addr);
 
@@ -82,7 +92,7 @@ ISR(TIMER0_COMPA_vect)
 	flipflop_addr = (1) << 5;
         LATCH_ADDR = (LATCH_ADDR & LATCH_MASK_INV) | (LATCH_MASK & flipflop_addr);
 
-	DATA_BUS = cube[current_layer][5];
+	DATA_BUS = reverse_byte(cube[current_layer][5]);
 	flipflop_addr = (5) << 5;
         LATCH_ADDR = (LATCH_ADDR & LATCH_MASK_INV) | (LATCH_MASK & flipflop_addr);
 
@@ -90,7 +100,7 @@ ISR(TIMER0_COMPA_vect)
 	flipflop_addr = (2) << 5;
         LATCH_ADDR = (LATCH_ADDR & LATCH_MASK_INV) | (LATCH_MASK & flipflop_addr);
 
-	DATA_BUS = cube[current_layer][3];
+	DATA_BUS = reverse_byte(cube[current_layer][3]);
 	flipflop_addr = (6) << 5;
         LATCH_ADDR = (LATCH_ADDR & LATCH_MASK_INV) | (LATCH_MASK & flipflop_addr);
 
@@ -98,7 +108,7 @@ ISR(TIMER0_COMPA_vect)
 	flipflop_addr = (3) << 5;
         LATCH_ADDR = (LATCH_ADDR & LATCH_MASK_INV) | (LATCH_MASK & flipflop_addr);
 
-	DATA_BUS = cube[current_layer][1];
+	DATA_BUS = reverse_byte(cube[current_layer][1]);
 	flipflop_addr = (7) << 5;
         LATCH_ADDR = (LATCH_ADDR & LATCH_MASK_INV) | (LATCH_MASK & flipflop_addr);
 

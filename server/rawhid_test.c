@@ -16,8 +16,8 @@
 
 #define UP		'o' 
 #define DOWN		'l'
-#define LEFT		'd'
-#define RIGHT		'a'
+#define LEFT		'a'
+#define RIGHT		'd'
 #define FORWARD		's'
 #define BACKWARD	'w'
 #define PRINT		' '
@@ -45,8 +45,8 @@ uint8_t cube[8*8];
 int main()
 {
 	char c;
-
 	int device_nr = 0;
+
 	int opened = rawhid_open(1, 0x16C0, 0x0480, 0xFFAB, 0x0200);
 	if (opened <= 0) {
 		printf("no rawhid device found\n");
@@ -85,9 +85,9 @@ void dump(uint8_t buf[]) {
 		for (uint8_t z=0; z<8; z++) {
 			for (uint8_t x=0; x<8; x++) {
 				if (getpixel(x,y,z,buf)==0) {
-					printf(".");
+					printf(". ");
 				} else {
-					printf("X");
+					printf("()");
 				}
 			}
 			printf(" ");
@@ -103,11 +103,11 @@ void clear(uint8_t buf[]) {
 }
 
 int getpixel(uint8_t x, uint8_t y, uint8_t z, uint8_t buf[]) {
-	return buf[z*8 + y] & (1<<x);
+	return buf[z*8 + y] & (1<< (7-x));
 }
 
 void setpixel(uint8_t x, uint8_t y, uint8_t z, uint8_t buf[]) {
-        buf[z*8 + y] |= (1 << x);
+        buf[z*8 + y] |= (1 << (7-x));
 }
 
 void move(char c) {
@@ -127,20 +127,25 @@ void text(int device_nr) {
 	printf("press backspace to quit");
 	char c; // pressed key
 	unsigned char chr[5];
-	while ((c = get_keystroke()) != 127) {
-		clear(buf);
-		font_getchar(c, chr);
 
-		// Put a character on the back of the cube
-		for (int x = 0; x < 5; x++) {
-			for (int y = 0; y < 8; y++) {
-				if ((chr[x] & (0x80 >> y))) {
-					setpixel(7, x + 2, y, buf);
+	for(;;)
+	while ((c = get_keystroke()) >0) {
+
+		if (c>='0' && c<='z') {
+			clear(buf);
+			font_getchar(c, chr);
+
+			// Put a character on the back of the cube
+			for (int x = 0; x < 5; x++) {
+				for (int y = 0; y < 8; y++) {
+					if ((chr[x] & (0x80 >> y))) {
+						setpixel( x + 2, 7-y, 0, buf);
+					}
 				}
 			}
+			dump(buf);
+			rawhid_send(device_nr, buf, 64, 100);
 		}
-		dump(buf);
-		rawhid_send(device_nr, buf, 64, 100);
 	}
 
 }

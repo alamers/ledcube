@@ -27,7 +27,7 @@ CFLAGS = -Wall -O2 -DOS_$(OS)
 LIBS = -lhid -lsetupapi
 endif
 
-OBJS = $(PROG).o hid.o font.o
+OBJS = $(PROG).o hid.o font.o snake.o cube.o cursor.o misc.o
 
 
 all: $(TARGET)

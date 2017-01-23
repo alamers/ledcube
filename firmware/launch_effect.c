@@ -10,7 +10,7 @@ void show_text(char* text) {
 void launch_effect (int effect)
 {
 	int i;
-    unsigned char ii;
+        unsigned char ii;
 
 	fill(0x00);
 
@@ -95,12 +95,12 @@ void launch_effect (int effect)
 			
 			
 		case 12:
-			effect_stringfly2("HELLO WORLD");
+			effect_stringfly2("FIRST8");
 			break;
 			
 		case 13:
 			fill(0x00);
-            // Create a random starting point for the Game of Life effect.
+                        // Create a random starting point for the Game of Life effect.
 			for (i = 0; i < 20;i++)
 			{
 				setvoxel(rand()%4,rand()%4,rand()%4);
